@@ -143,3 +143,11 @@ fi
 # Keep it clean. Build from here.                                     #
 #######################################################################
 
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/terraform terraform
+
+#######################################################################
+# Some exports
+#######################################################################
+export PATH=$PATH:/usr/local/go/bin

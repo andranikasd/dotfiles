@@ -1,0 +1,7 @@
+[user]
+  name  = Andranik Grigoryan
+  email = "andranik.grigoryan.personal@gmail.com"
+
+[core]
+  sshCommand = ssh -i /home/andranik/andranikasd/SSH/id_ed25519
+  editor     = vim
