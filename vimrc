@@ -152,15 +152,39 @@ Plug 'sbdchd/neoformat'
 
 call plug#end()
 
-" ------------------------------------------------------------
-" 5. APPEARANCE
-" ------------------------------------------------------------
-" let g:gruvbox_transparent_bg=1
-" let g:gruvbox_contrast_dark='hard'
-" set background=dark
-" colorscheme gruvbox
 
-" ------------------------------------------------------------
+" ============================================================
+" 5. APPEARANCE
+" ============================================================
+" Use default colorscheme with customized highlights for softer tones
+if exists("syntax_on")
+  syntax reset
+endif
+set background=dark " Or 'light' depending on your terminal
+colorscheme default
+
+" Transparent background and soft contrast
+highlight Normal ctermbg=NONE guibg=NONE
+highlight NonText ctermbg=NONE guibg=NONE
+highlight LineNr ctermfg=yellow ctermbg=NONE guifg=#d7af5f guibg=NONE
+highlight StatusLine ctermfg=white ctermbg=black
+highlight VertSplit ctermfg=grey ctermbg=NONE
+highlight TabLineFill ctermfg=grey ctermbg=NONE
+
+" Slightly dimmed comments, bold function names
+highlight Comment ctermfg=darkgrey gui=italic
+highlight Function ctermfg=yellow gui=bold
+highlight Identifier ctermfg=white
+highlight Type ctermfg=lightblue
+highlight String ctermfg=yellow guifg=#ffd700
+
+" Adjust Diagnostic colors (if using ALE or LSP)
+highlight ALEWarning ctermfg=yellow
+highlight ALEError ctermfg=red
+highlight ALEInfo ctermfg=cyan
+
+
+" " ------------------------------------------------------------
 " 6. TERMINAL
 " ------------------------------------------------------------
 set splitright
@@ -175,3 +199,25 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+
+" -----------------------------------------------------------
+" 6. Go performance tunings 
+" ----------------------------------------------------------
+
+" let g:go_code_completion_enabled = 0
+" let g:go_fmt_autosave = 0
+" let g:go_imports_autosave = 0
+" let g:go_doc_keywordprg_enabled = 0
+" let g:go_def_mapping_enabled = 0
+" let g:go_code_navigation_enabled = 0
+" let g:go_metalinter_enabled = []
+
+" Use ALE instead of vim-go for linting
+let g:ale_linters = {
+\   'go': ['gopls'],
+\ }
+let g:ale_fixers = {
+\   'go': ['gofmt', 'goimports'],
+\ }
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 1

@@ -151,3 +151,10 @@ complete -o nospace -C /usr/bin/terraform terraform
 # Some exports
 #######################################################################
 export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$HOME/go/bin
+export PATH=$PATH:$HOME/.config/emacs/bin
+
+#######################################################################
+# Some aliases
+#######################################################################
+alias tf='terraform'
