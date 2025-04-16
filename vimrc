@@ -1,4 +1,3 @@
-" ~/.vimrc - Fully Commented and Extended for DevOps, Tmux, Clipboard, and System Tools
 " Copyright (C) 2024 Andranik
 "
 " This configuration file is distributed under the GNU General Public License
@@ -109,7 +108,7 @@ nnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gd :Gdiffsplit<CR>
 
 " Format before save
-" autocmd BufWritePre *.go,*.py,*.js,*.ts,*.lua Neoformat
+autocmd BufWritePre *.go,*.py,*.js,*.ts,*.lua Neoformat
 
 " ------------------------------------------------------------
 " 4. PLUGIN SECTION (vim-plug)
@@ -183,7 +182,6 @@ highlight ALEWarning ctermfg=yellow
 highlight ALEError ctermfg=red
 highlight ALEInfo ctermfg=cyan
 
-
 " " ------------------------------------------------------------
 " 6. TERMINAL
 " ------------------------------------------------------------
@@ -199,11 +197,9 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-
 " -----------------------------------------------------------
 " 6. Go performance tunings 
 " ----------------------------------------------------------
-
 " let g:go_code_completion_enabled = 0
 " let g:go_fmt_autosave = 0
 " let g:go_imports_autosave = 0

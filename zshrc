@@ -146,15 +146,16 @@ fi
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
-
 #######################################################################
 # Some exports
 #######################################################################
 export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:$HOME/go/bin
 export PATH=$PATH:$HOME/.config/emacs/bin
-
+export PATH=$PATH:/opt/nvim-linux-x86_64/bin
+export PATH=$PATH:/home/andranik/.local/share/nvim/mason/
 #######################################################################
 # Some aliases
 #######################################################################
 alias tf='terraform'
+alias vi='nvim'
