@@ -1,6 +1,6 @@
 ########################################################################
 # .zshrc – Basic Zsh Configuration File                                #
-# Author: YOU (edited by ChatGPT)                                      #
+# Author: Andranik Grigoryan                                           #
 # Description: Minimal, clean Zsh config with enhanced GNU-style docs  #
 # Intended for: Linux dev environments, WSL, terminals, or servers     #
 ########################################################################
@@ -9,153 +9,201 @@
 # SHELL BEHAVIOR                       #
 ########################################
 
-# If you typo a command (e.g. "sl" instead of "ls"), try to correct it
+# Enable Emacs-style keybindings (so arrow keys work as expected)
+bindkey -e
+
+# Fix common arrow-key misbindings:
+# ─ Left/Right move the cursor
+bindkey '\e[D' backward-char
+bindkey '\e[C' forward-char
+# ─ Up/Down navigate history
+bindkey '\e[A' up-line-or-history
+bindkey '\e[B' down-line-or-history
+
+# If you typo a command (e.g. "sl" instead of "ls"), zsh will prompt a correction
 setopt CORRECT
 
-# Kill the bell. Nobody likes a terminal beep.
+# Disable the terminal bell
 setopt NO_BEEP
 
-# Allow '#' in commands like: echo foo # comment
+# Allow inline comments after a command using “#”
 setopt INTERACTIVE_COMMENTS
 
-# History should be shared across all terminals, not isolated per shell
-setopt SHARE_HISTORY
-
-# Don’t overwrite history when shell exits, just add new lines to the file
-setopt APPEND_HISTORY
-
-# Don’t store duplicate commands in history
-setopt HIST_IGNORE_ALL_DUPS
-
-# If you type a directory name, just cd into it without typing 'cd'
+# Auto-`cd` when you type a directory name
 setopt AUTO_CD
 
-# Enable Zsh’s autocompletion system
+# Load and initialize the completion system
 autoload -Uz compinit
 compinit
 
 ########################################
-# HISTORY CONFIG                       #
+# ENHANCED HISTORY HANDLING            #
 ########################################
 
-# Where to save history
+# File where your command history is saved
 export HISTFILE="$HOME/.data/HISTORY"
 
-# How many commands to keep in memory
-export HISTSIZE=5000
+# Number of commands to keep in memory (increase as desired)
+export HISTSIZE=20000
 
-# How many to keep in file
-export SAVEHIST=10000
+# Number of commands to save to disk
+export SAVEHIST=50000
+
+# Don’t store duplicate entries; expire older duplicates first
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
+
+# Ignore commands that start with a space
+setopt HIST_IGNORE_SPACE
+
+# Immediately append each command to the history file, with timestamp
+setopt INC_APPEND_HISTORY
+setopt INC_APPEND_HISTORY_TIME
+
+# Share history across all sessions
+setopt SHARE_HISTORY
+setopt APPEND_HISTORY
+
+# Enable incremental history search with Ctrl-R / Ctrl-S
+bindkey '^R' history-incremental-search-backward
+bindkey '^S' history-incremental-search-forward
 
 ########################################
 # PATHS & ENV VARS                     #
 ########################################
 
-# Add personal bin dirs to PATH (modify as needed)
+# Include your personal bin directories first
 export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 
-# Default editor — change to vim/nano if you're not a neovim user
+# Default editor (change to nvim if preferred)
 export EDITOR="vim"
 
-# Pager (used for man, git diff, etc)
+# Pager for long output (man pages, git diffs, etc.)
 export PAGER="less"
 
 ########################################
 # PROMPT SETUP                         #
 ########################################
-# Function to get current Git branch and short SHA (6 chars)
-# Outputs: [branch-name @ abc123]
+
+# Allow command-substitution in the prompt (for git info)
+setopt PROMPT_SUBST
+
+# Function: show current Git branch and short SHA, if in a repo
 git_prompt_info() {
-  # Only run if we're inside a Git repository
-  if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+  if git rev-parse --is-inside-work-tree &>/dev/null; then
     local branch sha
-    # Get current branch name (or HEAD in detached state)
-    branch=$(git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --exact-match 2>/dev/null || echo "(no branch)")
-    # Get current commit SHA (shorten to 6 chars)
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null \
+             || git describe --tags --exact-match 2>/dev/null \
+             || echo "(no branch)")
     sha=$(git rev-parse --short=6 HEAD 2>/dev/null)
-    echo "%F{red}${branch}%F{white} -> %F{cyan}${sha}%F{white}"
+    echo "%F{red}${branch}%F{white} → %F{cyan}${sha}%F{white}"
   fi
 }
 
-# Simple colored prompt:
-# user@host:~/path $
-setopt PROMPT_SUBST  # <- enable command substitution in prompt
+# Function: SSH into a GCE VM with an optional --project override
+gcp-vm() {
+  local project="rare-palace-269609"
 
+  # Parse flags
+  while [[ $# -gt 0 && "$1" =~ ^- ]]; do
+    case "$1" in
+      --project|-p)
+        shift
+        project="$1"
+        ;;
+      *)
+        echo "Unknown option: $1" >&2
+        return 1
+        ;;
+    esac
+    shift
+  done
+
+  # Validate arguments
+  if [[ $# -ne 2 ]]; then
+    cat <<EOF >&2
+Usage: gcp-vm [--project PROJECT] ZONE INSTANCE
+  ZONE      the GCE zone (e.g. us-central1-a)
+  INSTANCE  the VM name
+Options:
+  -p, --project   override default project (rare-palace-269609)
+EOF
+    return 1
+  fi
+
+  local zone="$1" instance="$2"
+
+  gcloud compute ssh \
+    --project="$project" \
+    --zone="$zone" \
+    "$instance"
+}
+
+# Define the visual prompt
 PROMPT='%F{white}%n@%F{yellow}%m%f:%~%f $(git_prompt_info) %# '
-# %m = hostname (short)
-# %~ = current dir (abbreviated)
-# %# = shows "#" if root, "$" otherwise
-# %F{color} ... %f = set/reset color
+# ─ %n = username
+# ─ %m = hostname
+# ─ %~ = current directory (abbreviated)
+# ─ %# = “#” for root, “$” for normal users
 
 ########################################
 # ALIASES                              #
 ########################################
 
-# Make common file commands safer (ask before overwrite)
+# Interactive file operations
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
 
-# Directory listing shortcuts
-alias ll='ls -alF'     # Long list, show all, classify
-alias la='ls -A'       # Show all except . and ..
-alias l='ls -CF'       # Columns, classify, fast
+# Directory listings
+alias ll='ls -alF'     # detailed list, classify
+alias la='ls -A'       # show hidden except . and ..
+alias l='ls -CF'       # columns, classify, fast
 
-# Reload config without restarting shell
+# Reload this config
 alias reload='source ~/.zshrc'
 
 ########################################
-# FNM: Node.js version manager (if used)
+# VERSION MANAGERS & LANGUAGES         #
 ########################################
 
-# Only enable if fnm is installed
-if command -v fnm > /dev/null 2>&1; then
+# fnm (Fast Node Manager), if installed
+if command -v fnm &>/dev/null; then
   eval "$(fnm env)"
 fi
 
-########################################
-# GOLANG PATH SETUP (manual install)   #
-########################################
-
-# If you installed Go to $HOME/go, make sure binaries are usable
+# Go binaries (if Go installed under $HOME/go)
 if [ -d "$HOME/go/bin" ]; then
   export PATH="$HOME/go/bin:$PATH"
 fi
 
 ########################################
-# OPTIONAL: Plugins (if you clone them manually)
+# COMPLETION FOR TERRAFORM             #
 ########################################
 
-# Autosuggestions (gray ghost text while typing)
-if [ -f "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-  source "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
-fi
+# Enable terraform autocomplete
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/terraform terraform
 
 ########################################
-# PROMPT INIT (only if you want to style it later)
+# ADDITIONAL PATHS                      #
 ########################################
 
-# promptinit
-# prompt default  # or use: prompt pure (if installed)
+export PATH="$PATH:/usr/local/go/bin"
+export PATH="$PATH:$HOME/.config/emacs/bin"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export PATH="$PATH:$HOME/.local/share/nvim/mason/"
+
+########################################
+# MORE ALIASES                          #
+########################################
+
+alias tf='terraform'
+alias vi='nvim'
+alias vim='nvim'
+alias lll='ls -lah'
 
 #######################################################################
 # END OF FILE                                                         #
-# Keep it clean. Build from here.                                     #
+# Maintain clarity – add new items above and keep this footer intact. #
 #######################################################################
-
-
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/bin/terraform terraform
-#######################################################################
-# Some exports
-#######################################################################
-export PATH=$PATH:/usr/local/go/bin
-export PATH=$PATH:$HOME/go/bin
-export PATH=$PATH:$HOME/.config/emacs/bin
-export PATH=$PATH:/opt/nvim-linux-x86_64/bin
-export PATH=$PATH:/home/andranik/.local/share/nvim/mason/
-#######################################################################
-# Some aliases
-#######################################################################
-alias tf='terraform'
-alias vi='nvim'
