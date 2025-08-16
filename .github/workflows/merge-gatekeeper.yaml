@@ -26,6 +26,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           checks-name: >
             Trunk Code Quality,
+            Bump Guard (Title ≥ Commits),
+            Conventional PR Title
           ref: ${{ github.event.pull_request.head.sha }}
           wait-interval: 30
           allowed-conclusions: success
