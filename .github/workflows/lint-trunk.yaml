@@ -1,0 +1,23 @@
+name: Trunk PR Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions: read-all
+
+jobs:
+  trunk_check:
+    if: ${{ github.event.pull_request.base.ref == github.event.repository.default_branch }}
+    name: Trunk Code Quality
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trunk Code Quality
+        uses: trunk-io/trunk-action@v1
+
