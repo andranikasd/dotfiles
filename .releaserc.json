@@ -1,7 +1,14 @@
 {
   "branches": ["master"],
   "plugins": [
-    "@semantic-release/commit-analyzer",
+    "@semantic-release/commit-analyzer", {
+    "preset": "conventionalcommits",
+    "releaseRules": [],
+    "parserOpts": {
+      "mergePattern": "^Merge pull request #\\d+ from .+\\n(.+)$",
+      "mergeCorrespondence": ["id", "message"]
+    }
+    },
     "@semantic-release/release-notes-generator",
     [
       "@semantic-release/changelog",
