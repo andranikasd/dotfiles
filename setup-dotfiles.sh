@@ -58,13 +58,22 @@ _ts() {
 }
 
 _log_emit() {
+	local _ts
+	_current_ts="$(_ts)"
 	# $1 level-num, $2 prefix(colorized), $3 message
 	if [[ $1 -lt ${LOG_LEVEL_NUM} ]]; then return 0; fi
 	if [[ -n ${DOTFILES_LOG_FILE-} ]]; then
 		# strip ANSI for file
-		printf '%s[%s] %s\n' "$(_ts)" "$(printf '%s' "$2" | sed 's/\x1b\[[0-9;]*m//g')" "$3" >>"${DOTFILES_LOG_FILE}"
+		# Strip ANSI colors from the level string
+		level_clean="$(printf '%s' "$2" | sed 's/\x1b\[[0-9;]*m//g')"
+
+		# Store the message
+		msg="$3"
+
+		# Append to the log file
+		printf '%s[%s] %s\n' "${_current_ts}" "${level_clean}" "${msg}" >>"${DOTFILES_LOG_FILE}"
 	fi
-	printf '%s%s%s %s%s\n' "$(_ts)" "$2" "${C_RESET}" "$3" "" 1>&2
+	printf '%s%s%s %s%s\n' "${_current_ts}" "$2" "${C_RESET}" "$3" "" 1>&2
 }
 
 log_debug() { _log_emit 10 "${C_BLUE}[debug]" "$*"; }
@@ -268,7 +277,7 @@ fi
 
 add_loader
 
-sha="$(resolve_branch_sha)" || die "Failed to resolve branch SHA for ${OWNER}/${REPO}@${BRANCH}"
+sha="$(resolve_branch_sha)"
 [[ -n ${sha} ]] || die "Failed to resolve branch SHA for ${OWNER}/${REPO}@${BRANCH}"
 
 all_paths="$(list_paths "${sha}")"
