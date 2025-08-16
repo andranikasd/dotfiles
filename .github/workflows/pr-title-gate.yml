@@ -1,0 +1,92 @@
+name: PR Title Gate
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  title_lint:
+    name: Conventional PR Title
+    runs-on: ubuntu-latest
+    steps:
+      # Lint the PR title (no checkout needed)
+      - name: Lint PR title (Conventional Commits)
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Allowed types
+          types: |
+            feat
+            fix
+            perf
+            docs
+            ops
+            chore
+            refactor
+            style
+            test
+            build
+            ci
+            revert
+          requireScope: false
+          subjectPattern: ^.{1,72}$
+          enablePrComment: true
+
+  bump_guard:
+    # Only gate PRs that target the default branch (e.g., master)
+    if: ${{ github.event.pull_request.base.ref == github.event.repository.default_branch }}
+    name: Bump Guard (Title ≥ Commits)
+    runs-on: ubuntu-latest
+    needs: [title_lint]
+    steps:
+      # No checkout; we just read PR metadata and commit messages
+      - name: Ensure PR title bump >= commits bump
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.pull_request.title || '';
+            const body  = context.payload.pull_request.body  || '';
+            const types = ['feat','fix','perf','docs','chore','refactor','style','test','build','ci','revert'];
+
+            function bumpFrom(message, extraBody='') {
+              const first = (message || '').split('\n')[0];
+              const m = first.match(new RegExp(`^(${types.join('|')})(\\(.+\\))?(!)?:\\s+`));
+              const hasBreaking = !!(m && m[3]) || /(^|\n)BREAKING CHANGE:/i.test((message||'') + '\n' + (extraBody||''));
+              if (hasBreaking) return 3;                    // major
+              if (m && m[1] === 'feat') return 2;           // minor
+              if (m && (m[1] === 'fix' || m[1] === 'perf')) return 1; // patch
+              return 0;                                     // none
+            }
+
+            // Compute bump required by commits in this PR
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              per_page: 250
+            });
+
+            let commitBump = 0;
+            for (const c of commits) {
+              commitBump = Math.max(commitBump, bumpFrom(c.commit.message, c.commit.body));
+            }
+
+            // Compute bump implied by PR title (important if you Squash & merge)
+            const titleBump = bumpFrom(title, body);
+
+            const names = ['none','patch','minor','major'];
+            core.info(`Commit bump: ${names[commitBump]} | Title bump: ${names[titleBump]}`);
+
+            if (commitBump > titleBump) {
+              core.setFailed(
+                `PR title understates bump (title=${names[titleBump]}, commits=${names[commitBump]}). ` +
+                `Update the PR title to at least '${commitBump===3?'feat!:':'feat:'/*minor*/}' or 'fix:' as appropriate, ` +
+                `or add 'BREAKING CHANGE:' when needed.`
+              );
+            }
