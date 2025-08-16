@@ -19,6 +19,8 @@ lint:
   disabled:
     - taplo
   enabled:
+    - actionlint@1.7.7
+    - yamllint@1.37.1
     - git-diff-check
     - shellcheck@0.10.0
     - shfmt@3.6.0
