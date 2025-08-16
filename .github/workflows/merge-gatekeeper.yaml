@@ -30,4 +30,4 @@ jobs:
           wait-interval: 30
           allowed-conclusions: success
       - name: All required checks passed
-        run: echo "✅ Gatekeeper: all checks succeeded."
+        run: echo "✅ Gatekeeper all checks succeeded."
