@@ -12,7 +12,7 @@ permissions:
 jobs:
   title_lint:
     name: Conventional PR Title
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       # Lint the PR title (no checkout needed)
       - name: Lint PR title (Conventional Commits)

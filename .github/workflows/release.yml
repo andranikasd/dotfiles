@@ -16,7 +16,7 @@ concurrency:
 jobs:
   semantic_release:
     name: semantic-release
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     if: "!contains(github.event.head_commit.message, 'chore(release):')"
     steps:
       - name: Checkout (full history)

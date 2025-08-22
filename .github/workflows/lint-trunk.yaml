@@ -10,7 +10,7 @@ jobs:
   trunk_check:
     if: ${{ github.event.pull_request.base.ref == github.event.repository.default_branch }}
     name: Trunk Code Quality
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       checks: write
       contents: read
