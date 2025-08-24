@@ -1,0 +1,65 @@
+/* Compact Dark — matches a solid dark Waybar */
+window {
+  margin: 0px;
+  padding: 14px;
+  background-color: rgba(24,24,27,0.96);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 12.5px;
+  color: #eaeaea;
+}
+
+#input {
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background-color: rgba(38,38,45,0.95);
+}
+
+#inner-box {
+  padding: 6px;
+}
+
+#outer-box {
+  padding: 0px;
+}
+
+#scroll {
+  padding: 0 2px;
+}
+
+#entry {
+  padding: 8px 10px;
+  margin: 2px 0;
+  border-radius: 8px;
+}
+
+#entry:selected {
+  background-color: rgba(124,58,237,0.22); /* subtle violet */
+  box-shadow: inset 0 0 0 1px rgba(124,58,237,0.35);
+}
+
+#img {
+  margin-right: 8px;
+}
+
+#text {
+  color: #e6e6e6;
+}
+
+#text:selected {
+  color: #ffffff;
+}
+
+/* size & placement */
+window {
+  /* center, 520px width; adjust as you like */
+  min-width: 520px;
+  max-width: 720px;
+}
+

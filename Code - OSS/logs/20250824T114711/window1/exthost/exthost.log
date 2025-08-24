@@ -1,0 +1,18 @@
+2025-08-24 11:47:12.847 [info] Extension host with pid 11138 started
+2025-08-24 11:47:12.847 [info] Skipping acquiring lock for /home/andranik/.config/Code - OSS/User/workspaceStorage/ceb8f4e19d0885b86aa590e9b227d2b3.
+2025-08-24 11:47:12.874 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2025-08-24 11:47:12.897 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*'
+2025-08-24 11:47:12.900 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2025-08-24 11:47:12.937 [info] Eager extensions activated
+2025-08-24 11:47:12.940 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2025-08-24 11:47:12.941 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2025-08-24 11:47:51.136 [info] ExtensionService#_doActivateExtension vscode.git, startup: false, activationEvent: 'api', root cause: vscode.github
+2025-08-24 11:47:51.256 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2025-08-24 11:47:59.450 [info] ExtensionService#_doActivateExtension tombi-toml.tombi, startup: false, activationEvent: 'workspaceContains:**/*.toml'
+2025-08-24 11:48:03.065 [info] ExtensionService#_doActivateExtension vscode-icons-team.vscode-icons, startup: false, activationEvent: 'onStartupFinished'
+2025-08-24 11:48:07.075 [info] ExtensionService#_doActivateExtension vscode.configuration-editing, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-08-24 11:48:07.082 [info] ExtensionService#_doActivateExtension vscode.json-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-08-24 11:48:07.118 [info] ExtensionService#_doActivateExtension vscode.typescript-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-08-24 11:48:11.375 [info] ExtensionService#_doActivateExtension vscode.extension-editing, startup: false, activationEvent: 'onLanguage:markdown'
+2025-08-24 11:48:11.385 [info] ExtensionService#_doActivateExtension vscode.markdown-language-features, startup: false, activationEvent: 'onLanguage:markdown'
+2025-08-24 11:48:12.345 [info] ExtensionService#_doActivateExtension vscode.markdown-math, startup: false, activationEvent: 'api', root cause: vscode.markdown-language-features

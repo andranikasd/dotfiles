@@ -1,0 +1,97 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 35,
+  "margin-top": 2,
+  "margin-left": 0,
+  "margin-right": 0,
+
+  "modules-left": ["hyprland/workspaces", "hyprland/window"],
+  "modules-center": ["clock"],
+  "modules-right": ["tray", "pulseaudio", "backlight", "network", "battery"],
+
+  // Workspaces
+  "hyprland/workspaces": {
+    "all-outputs": true,
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1",
+    "format": "{icon}",
+    "format-icons": {
+      "1": "󰊠", "2": "󰊠", "3": "󰊠", "4": "󰊠", "5": "󰊠",
+      "6": "󰊠", "7": "󰊠", "8": "󰊠", "9": "󰊠", "10": "󰊠",
+      "default": ""
+    },
+    "swap-icon-label": true
+  },
+
+  // Focused window
+  "hyprland/window": {
+    "format": "{title}",
+    "max-length": 80,
+    "separate-outputs": false,
+    "rewrite": {
+      "^(.*) — Mozilla Firefox$": "  $1",
+      "^(.*) - Visual Studio Code$": "󰨞  $1",
+      ".*Alacritty.*": "  Terminal",
+      ".*kitty.*": "  Terminal"
+    }
+  },
+
+  // Clock (portable format — no chrono specifiers)
+  "clock": {
+    "interval": 1,
+    "format": "󰥔  {:%Y-%m-%d %H:%M:%S}",       // if this still errors, switch to the next line:
+    // "time-format": "%Y-%m-%d %H:%M:%S",     // (and set "format": "󰥔  {time}")
+    "tooltip": true
+  },
+
+  // Audio
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 muted",
+    "format-icons": {
+      "headphones": "󰋋",
+      "handsfree": "󰋋",
+      "headset": "󰋋",
+      "default": ["󰕿","󰖀","󰕾"]
+    },
+    "scroll-step": 3,
+    "on-click": "pavucontrol",
+    "tooltip": true
+  },
+
+  // Brightness
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "󰃟 {percent}%",
+    "on-scroll-up": "brightnessctl set +5%",
+    "on-scroll-down": "brightnessctl set 5%-"
+  },
+
+  // Network (use conservative fields to avoid “argument not found”)
+  "network": {
+    "interval": 3,
+    "format-wifi": "󰖩 {essid} {signalStrength}%",
+    "format-ethernet": "󰈀 {ifname}",
+    "format-disconnected": "󰖪 offline",
+    "tooltip": true,
+    "tooltip-format": "{ifname} {ipaddr}"   // avoid {cidr}/{gateway} to prevent errors
+  },
+
+  // Battery
+  "battery": {
+    "states": { "good": 75, "warning": 30, "critical": 15 },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰂄 {capacity}%",
+    "format-icons": ["󰁺","󰁼","󰁾","󰂀","󰂂","󰁹"],
+    "interval": 5
+  },
+
+  // Tray
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8
+  }
+}
+

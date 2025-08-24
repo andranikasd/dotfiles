@@ -1,0 +1,7 @@
+2025-08-24 11:40:42.251 [info] Started local extension host with pid 7434.
+2025-08-24 11:40:42.269 [info] Started initializing default profile extensions in extensions installation folder. file:///home/andranik/.vscode-oss/extensions
+2025-08-24 11:40:42.348 [info] Completed initializing default profile extensions in extensions installation folder. file:///home/andranik/.vscode-oss/extensions
+2025-08-24 11:40:42.349 [info] ChatSessionStore: Migrating 0 chat sessions from storage service to file system
+2025-08-24 11:40:45.107 [info] [perf] Render performance baseline is 17ms
+2025-08-24 11:40:52.803 [error] [Extension Host] (node:7434) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `exe --trace-deprecation ...` to show where the warning was created)

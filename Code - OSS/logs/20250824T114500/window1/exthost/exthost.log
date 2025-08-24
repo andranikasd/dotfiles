@@ -1,0 +1,9 @@
+2025-08-24 11:45:00.964 [info] Extension host with pid 10035 started
+2025-08-24 11:45:00.964 [info] Skipping acquiring lock for /home/andranik/.config/Code - OSS/User/workspaceStorage/b1d3305bc77558c1ecfe9fa00efda9db.
+2025-08-24 11:45:00.970 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*'
+2025-08-24 11:45:00.973 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2025-08-24 11:45:01.008 [info] Eager extensions activated
+2025-08-24 11:45:01.009 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2025-08-24 11:45:01.010 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2025-08-24 11:45:05.006 [info] Extension host terminating: renderer closed the MessagePort
+2025-08-24 11:45:05.008 [info] Extension host with pid 10035 exiting with code 0

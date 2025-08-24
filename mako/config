@@ -1,0 +1,9 @@
+font=JetBrainsMono 12
+background-color=#18181b
+text-color=#eaeaea
+border-size=2
+border-color=#44475a
+default-timeout=5000
+padding=10
+radius=10
+

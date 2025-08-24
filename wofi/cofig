@@ -1,0 +1,17 @@
+# behavior
+show=drun
+insensitive=true         # case-insensitive
+matching=fuzzy
+allow_images=true
+gtk_dark=true
+
+# window
+normal_window=true       # real window (behaves nicer on tm, portals)
+hide_scroll=true
+filter_rate=100
+prompt=Search…
+
+# layout (used by both styles; width/height overridden via style)
+columns=1
+lines=10
+

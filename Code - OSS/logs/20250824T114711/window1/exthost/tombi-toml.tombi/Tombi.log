@@ -1,0 +1,16 @@
+2025-08-24 11:47:59.488 [info] Using Language Server binary at /home/andranik/.vscode-oss/extensions/tombi-toml.tombi-0.5.18-linux-x64/server/tombi
+2025-08-24 11:47:59.496 [info] Tombi Language Server Version: 0.5.18
+2025-08-24 11:48:03.004 [info] Sent `workspace/diagnostic` request
+2025-08-24 11:48:03.004 [info] onDidOpenTextDocument: vscode-scm:git/scm0/input?rootUri%3Dfile%253A%252F%252F%252Fhome%252Fandranik%252Fandranikasd%252Fdotfiles
+2025-08-24 11:48:03.004 [info] extension activated
+2025-08-24 11:48:07.153 [info] onDidSaveTextDocument: vscode-userdata:/home/andranik/.config/Code%20-%20OSS/User/settings.json
+2025-08-24 11:49:45.089 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/aliases.sh
+2025-08-24 11:49:51.133 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/aliases.sh
+2025-08-24 11:50:07.697 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/aliases.sh
+2025-08-24 11:50:11.124 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/aliases.sh
+2025-08-24 11:50:14.183 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/aliases.sh
+2025-08-24 11:50:24.918 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/aliases.sh
+2025-08-24 11:50:25.126 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/aliases.sh
+2025-08-24 11:50:25.285 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/aliases.sh
+2025-08-24 11:50:53.372 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/vimrc
+2025-08-24 11:50:58.708 [info] onDidSaveTextDocument: file:///home/andranik/andranikasd/dotfiles/_envcommon/vimrc

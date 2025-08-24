@@ -1,0 +1,15 @@
+2025-08-24 11:42:22.424 [info] Extension host with pid 8657 started
+2025-08-24 11:42:22.424 [info] Skipping acquiring lock for /home/andranik/.config/Code - OSS/User/workspaceStorage/ceb8f4e19d0885b86aa590e9b227d2b3.
+2025-08-24 11:42:22.477 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2025-08-24 11:42:22.563 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*'
+2025-08-24 11:42:22.576 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2025-08-24 11:42:22.615 [info] Eager extensions activated
+2025-08-24 11:42:22.622 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2025-08-24 11:42:22.624 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2025-08-24 11:42:43.500 [info] ExtensionService#_doActivateExtension vscode.configuration-editing, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-08-24 11:42:43.506 [info] ExtensionService#_doActivateExtension vscode.json-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-08-24 11:42:43.542 [info] ExtensionService#_doActivateExtension vscode.typescript-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-08-24 11:42:47.684 [info] ExtensionService#_doActivateExtension vscode.extension-editing, startup: false, activationEvent: 'onLanguage:json'
+2025-08-24 11:42:47.693 [info] ExtensionService#_doActivateExtension vscode.npm, startup: false, activationEvent: 'onLanguage:json'
+2025-08-24 11:44:57.573 [info] Extension host terminating: renderer closed the MessagePort
+2025-08-24 11:44:57.578 [info] Extension host with pid 8657 exiting with code 0

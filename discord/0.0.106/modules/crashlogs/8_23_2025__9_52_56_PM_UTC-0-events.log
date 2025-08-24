@@ -1,0 +1,30 @@
+8/23/2025, 9:52:56 PM UTC 0: 
+
+----------------------------------------------
+8/23/2025, 9:52:56 PM UTC 1: Discord starting: {"releaseChannel":"stable","version":"0.0.106"}, modulepath: /home/andranik/.config/discord/0.0.106/modules
+8/23/2025, 9:52:56 PM UTC 2: ✅ webContents.created web1 ""
+8/23/2025, 9:52:56 PM UTC 3: ✅ window.created win1 "discord"
+8/23/2025, 9:52:56 PM UTC 4: ✅ webContents.did-finish-load web1
+8/23/2025, 9:53:18 PM UTC 5: ✅ webContents.created web2 ""
+8/23/2025, 9:53:18 PM UTC 6: ✅ window.created win2 "Discord"
+8/23/2025, 9:53:20 PM UTC 7: ✅ webContents.did-finish-load web2
+8/23/2025, 9:53:23 PM UTC 8: window.close win1
+8/23/2025, 9:53:23 PM UTC 9: webContents.destroyed web1
+8/23/2025, 9:53:23 PM UTC 10: window.closed win1
+8/23/2025, 10:02:59 PM UTC 11: before-quit
+8/23/2025, 10:02:59 PM UTC 12: window.close win2
+8/23/2025, 10:02:59 PM UTC 13: ❌ child-process-gone {
+  type: 'Utility',
+  reason: 'killed',
+  exitCode: 15,
+  serviceName: 'audio.mojom.AudioService',
+  name: 'Audio Service'
+}
+8/23/2025, 10:02:59 PM UTC 14: ❌ child-process-gone {
+  type: 'Utility',
+  reason: 'killed',
+  exitCode: 15,
+  serviceName: 'network.mojom.NetworkService',
+  name: 'Network Service'
+}
+8/23/2025, 10:02:59 PM UTC 15: ❌ render-process-gone { reason: 'killed', exitCode: 15 }

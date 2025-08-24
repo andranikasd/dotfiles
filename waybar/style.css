@@ -1,0 +1,100 @@
+/* ---------------------------
+   Waybar Dark Minimal Theme
+   --------------------------- */
+
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 12px;
+  min-height: 0;
+  color: #eaeaea;
+}
+
+window#waybar {
+  background: transparent;
+}
+
+/* wrapper box */
+window > box {
+  background: rgba(24,24,27,0.85);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+/* modules */
+#workspaces,
+#clock,
+#pulseaudio,
+#backlight,
+#network,
+#battery,
+#tray,
+#window {
+  margin: 0 6px;
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+
+/* workspaces */
+#workspaces button {
+  color: #a1a1aa;
+  padding: 0 8px;
+  margin: 0 4px;
+  background: transparent;
+}
+
+#workspaces button.focused {
+  color: #fff;
+  background: rgba(38,38,45,0.85);
+}
+
+#workspaces button.urgent {
+  color: #fff;
+  background: #ef4444;
+}
+
+/* window title */
+#window {
+  color: #d4d4d8;
+}
+
+/* clock */
+#clock {
+  background: rgba(38,38,45,0.85);
+}
+
+/* pulseaudio */
+#pulseaudio {
+  background: rgba(38,38,45,0.85);
+}
+#pulseaudio.muted {
+  color: #a1a1aa;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* brightness & net */
+#backlight,
+#network {
+  background: rgba(38,38,45,0.85);
+}
+
+/* battery */
+#battery {
+  background: rgba(38,38,45,0.85);
+}
+#battery.good { color: #22c55e; }
+#battery.warning { color: #f59e0b; }
+#battery.critical {
+  color: #ef4444;
+  animation: blink 1s steps(2, end) infinite;
+}
+
+
+/* tray */
+#tray {
+  background: transparent;
+}
+
+@keyframes blink {
+  to { opacity: 0.35; }
+}
+
