@@ -1,0 +1,38 @@
+# Window settings
+window-decoration = false
+window-padding-x = 10
+window-padding-y = 10
+
+# Font settings
+font-family = JetBrains Mono
+font-size = 12
+font-style = Regular
+
+# Very dark theme
+background = 0a0a0a
+foreground = e0e0e0
+
+# ANSI colors
+palette = 0=1a1a1a
+palette = 1=d32f2f
+palette = 2=388e3c
+palette = 3=fbc02d
+palette = 4=1976d2
+palette = 5=ab47bc
+palette = 6=00acc1
+palette = 7=cfcfcf
+palette = 8=4a4a4a
+palette = 9=ef5350
+palette = 10=66bb6a
+palette = 11=ffee58
+palette = 12=42a5f5
+palette = 13=ce93d8
+palette = 14=4dd0e1
+palette = 15=f5f5f5
+
+# Cursor settings
+cursor-color = e0e0e0
+
+# Selection colors
+selection-background = 2a2a2a
+selection-foreground = e0e0e0
