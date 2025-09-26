@@ -391,22 +391,34 @@ setup_shell() {
     log "Copying dotfiles to $DOTFILES_DIR..."
     
     # Copy starship configuration
-    if [[ -f "$SCRIPT_DIR/starship.toml" ]]; then
-        cp "$SCRIPT_DIR/starship.toml" "$DOTFILES_DIR/"
+    if [[ -f "$SCRIPT_DIR/../config/starship.toml" ]]; then
+        # Remove existing file/symlink if it exists
+        if [[ -e "$DOTFILES_DIR/starship.toml" ]]; then
+            rm -f "$DOTFILES_DIR/starship.toml"
+        fi
+        cp "$SCRIPT_DIR/../config/starship.toml" "$DOTFILES_DIR/"
         log "Copied starship.toml"
     fi
     
     # Copy all aliases files
-    for file in "$SCRIPT_DIR"/aliases_*; do
+    for file in "$SCRIPT_DIR"/../aliases/aliases_*; do
         if [[ -f "$file" ]]; then
+            # Remove existing file/symlink if it exists
+            if [[ -e "$DOTFILES_DIR/$(basename "$file")" ]]; then
+                rm -f "$DOTFILES_DIR/$(basename "$file")"
+            fi
             cp "$file" "$DOTFILES_DIR/"
             log "Copied $(basename "$file")"
         fi
     done
     
     # Copy all functions files
-    for file in "$SCRIPT_DIR"/functions_*; do
+    for file in "$SCRIPT_DIR"/../functions/functions_*; do
         if [[ -f "$file" ]]; then
+            # Remove existing file/symlink if it exists
+            if [[ -e "$DOTFILES_DIR/$(basename "$file")" ]]; then
+                rm -f "$DOTFILES_DIR/$(basename "$file")"
+            fi
             cp "$file" "$DOTFILES_DIR/"
             log "Copied $(basename "$file")"
         fi

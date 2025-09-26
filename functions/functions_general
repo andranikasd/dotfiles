@@ -1,25 +1,25 @@
 # ─── General Shell Functions ───
 
 # ─── Directory Navigation Functions ───
-mkcd() {
+function mkcd() {
     mkdir -p "$1" && cd "$1"
 }
 
 # Create directory and cd into it, with FZF selection
-fmkcd() {
+function fmkcd() {
     local dir
     dir=$(echo | fzf --print-query)
     mkdir -p "$dir" && cd "$dir"
 }
 
 # Quick directory bookmarking
-bookmark() {
+function bookmark() {
     echo "$(pwd)" >> "$HOME/.bookmarks"
     echo "Bookmarked: $(pwd)"
 }
 
 # Go to bookmarked directory
-goto() {
+function goto() {
     local dir
     dir=$(cat "$HOME/.bookmarks" | fzf --preview "ls -la {}")
     cd "$dir"
@@ -27,7 +27,7 @@ goto() {
 
 # ─── File Operations Functions ───
 # Extract various archive types
-extract() {
+function extract() {
     if [ -f "$1" ]; then
         case "$1" in
             *.tar.bz2)   tar xjf "$1"     ;;
@@ -52,25 +52,25 @@ extract() {
 }
 
 # Create archive with progress
-archive() {
+function archive() {
     local name="$1"
     shift
     tar -czf "${name}.tar.gz" "$@"
 }
 
 # Find and delete files with confirmation
-findrm() {
+function findrm() {
     find . -name "$1" -type f -exec rm -i {} \;
 }
 
 # Find and delete directories with confirmation
-findrmdir() {
+function findrmdir() {
     find . -name "$1" -type d -exec rm -rf {} \;
 }
 
 # ─── System Information Functions ───
 # Show system information
-sysinfo() {
+function sysinfo() {
     echo "=== System Information ==="
     echo "Hostname: $(hostname)"
     echo "Kernel: $(uname -r)"
@@ -82,7 +82,7 @@ sysinfo() {
 }
 
 # Show network information
-netinfo() {
+function netinfo() {
     echo "=== Network Information ==="
     echo "External IP: $(curl -s ifconfig.me)"
     echo "Local IP: $(hostname -I | awk '{print $1}')"
@@ -91,7 +91,7 @@ netinfo() {
 }
 
 # Show process information
-psinfo() {
+function psinfo() {
     echo "=== Process Information ==="
     echo "Top CPU processes:"
     ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -10
@@ -102,7 +102,7 @@ psinfo() {
 
 # ─── Development Functions ───
 # Create a new project directory with git
-newproject() {
+function newproject() {
     local project_name="$1"
     if [ -z "$project_name" ]; then
         echo "Usage: newproject <project_name>"
@@ -119,7 +119,7 @@ newproject() {
 }
 
 # Clone and setup a repository
-clonesetup() {
+function clonesetup() {
     local repo_url="$1"
     local repo_name=$(basename "$repo_url" .git)
     
@@ -154,7 +154,7 @@ clonesetup() {
 
 # ─── Git Functions ───
 # Quick git setup for new repository
-gitsetup() {
+function gitsetup() {
     local repo_name="$1"
     if [ -z "$repo_name" ]; then
         repo_name=$(basename "$(pwd)")
@@ -168,7 +168,7 @@ gitsetup() {
 }
 
 # Git commit with emoji
-gcommit() {
+function gcommit() {
     local message="$1"
     if [ -z "$message" ]; then
         echo "Usage: gcommit <message>"
@@ -180,18 +180,18 @@ gcommit() {
 }
 
 # Git push with upstream
-gpush() {
+function gpush() {
     local branch=$(git branch --show-current)
     git push --set-upstream origin "$branch"
 }
 
 # Git pull with rebase
-gpull() {
+function gpull() {
     git pull --rebase --autostash
 }
 
 # Git sync (fetch, pull, push)
-gsync() {
+function gsync() {
     git fetch --all --prune
     git pull --rebase --autostash
     git push
@@ -199,7 +199,7 @@ gsync() {
 
 # ─── Docker Functions ───
 # Docker cleanup
-dcleanup() {
+function dcleanup() {
     echo "Cleaning up Docker resources..."
     docker system prune -f
     docker volume prune -f
@@ -208,7 +208,7 @@ dcleanup() {
 }
 
 # Docker run with interactive shell
-drun() {
+function drun() {
     local image="$1"
     if [ -z "$image" ]; then
         echo "Usage: drun <image>"
@@ -219,7 +219,7 @@ drun() {
 }
 
 # Docker exec into running container
-dexec() {
+function dexec() {
     local container="$1"
     if [ -z "$container" ]; then
         container=$(docker ps | fzf --preview "docker logs {1}" | awk '{print $1}')
@@ -230,7 +230,7 @@ dexec() {
 
 # ─── Kubernetes Functions ───
 # Switch Kubernetes context
-kctx() {
+function kctx() {
     local context="$1"
     if [ -z "$context" ]; then
         context=$(kubectl config get-contexts -o name | fzf)
@@ -241,7 +241,7 @@ kctx() {
 }
 
 # Switch Kubernetes namespace
-kns() {
+function kns() {
     local namespace="$1"
     if [ -z "$namespace" ]; then
         namespace=$(kubectl get namespaces -o name | fzf | cut -d/ -f2)
@@ -252,7 +252,7 @@ kns() {
 }
 
 # Port forward with FZF selection
-kpf() {
+function kpf() {
     local pod=$(kubectl get pods --all-namespaces | fzf --preview "kubectl describe pod {2} -n {1}" | awk '{print $2 " -n " $1}')
     local port="$1"
     
@@ -266,7 +266,7 @@ kpf() {
 
 # ─── Terraform Functions ───
 # Terraform workspace management
-tfws() {
+function tfws() {
     local workspace="$1"
     if [ -z "$workspace" ]; then
         workspace=$(terraform workspace list | fzf)
@@ -277,13 +277,13 @@ tfws() {
 }
 
 # Terraform plan with output
-tfplan() {
+function tfplan() {
     terraform plan -out=plan.out
     echo "Plan saved to plan.out"
 }
 
 # Terraform apply with plan
-tfapply() {
+function tfapply() {
     if [ -f "plan.out" ]; then
         terraform apply plan.out
         rm plan.out
@@ -294,7 +294,7 @@ tfapply() {
 
 # ─── AWS Functions ───
 # AWS profile management
-awsprofile() {
+function awsprofile() {
     local profile="$1"
     if [ -z "$profile" ]; then
         profile=$(aws configure list-profiles | fzf)
@@ -305,7 +305,7 @@ awsprofile() {
 }
 
 # AWS region management
-awsregion() {
+function awsregion() {
     local region="$1"
     if [ -z "$region" ]; then
         region=$(aws configure list-regions | fzf)
@@ -317,14 +317,14 @@ awsregion() {
 
 # ─── Utility Functions ───
 # Create a temporary directory and cd into it
-tmpdir() {
+function tmpdir() {
     local dir=$(mktemp -d)
     cd "$dir"
     echo "Created temporary directory: $dir"
 }
 
 # Find and replace in files
-findreplace() {
+function findreplace() {
     local search="$1"
     local replace="$2"
     local pattern="$3"
@@ -343,7 +343,7 @@ findreplace() {
 }
 
 # Create a backup of a file
-backup() {
+function backup() {
     local file="$1"
     if [ -z "$file" ]; then
         echo "Usage: backup <file>"
@@ -359,7 +359,7 @@ backup() {
 }
 
 # Restore from backup
-restore() {
+function restore() {
     local file="$1"
     if [ -z "$file" ]; then
         echo "Usage: restore <file>"
@@ -377,25 +377,25 @@ restore() {
 
 # ─── FZF Integration Functions ───
 # FZF with preview for any command
-fpreview() {
+function fpreview() {
     local cmd="$1"
     shift
     eval "$cmd" | fzf --preview "$*"
 }
 
 # FZF with preview for files
-fpreview_files() {
+function fpreview_files() {
     fd --type f --hidden --follow --exclude .git | fzf --preview "bat --color=always --style=header,grid --line-range :300 {}"
 }
 
 # FZF with preview for directories
-fpreview_dirs() {
+function fpreview_dirs() {
     fd --type d --hidden --follow --exclude .git | fzf --preview "exa --tree --level=2 {}"
 }
 
 # ─── Weather Functions ───
 # Get weather information
-weather() {
+function weather() {
     local city="$1"
     if [ -z "$city" ]; then
         city="London"
@@ -406,20 +406,20 @@ weather() {
 
 # ─── Password Functions ───
 # Generate a random password
-genpass() {
+function genpass() {
     local length="${1:-16}"
     openssl rand -base64 32 | tr -d "=+/" | cut -c1-"$length"
 }
 
 # Generate a secure password
-genpass_secure() {
+function genpass_secure() {
     local length="${1:-16}"
     openssl rand -base64 48 | tr -d "=+/" | cut -c1-"$length"
 }
 
 # ─── Time Functions ───
 # Show current time in different timezones
-worldtime() {
+function worldtime() {
     echo "=== World Time ==="
     echo "UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
     echo "New York: $(TZ='America/New_York' date '+%Y-%m-%d %H:%M:%S')"
@@ -430,12 +430,12 @@ worldtime() {
 
 # ─── Network Functions ───
 # Test internet speed
-speedtest() {
+function speedtest() {
     curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3
 }
 
 # Check if a website is up
-isup() {
+function isup() {
     local url="$1"
     if [ -z "$url" ]; then
         echo "Usage: isup <url>"
@@ -451,7 +451,7 @@ isup() {
 
 # ─── System Maintenance Functions ───
 # Update system packages
-update() {
+function update() {
     if command -v apt-get >/dev/null 2>&1; then
         sudo apt-get update && sudo apt-get upgrade -y
     elif command -v yum >/dev/null 2>&1; then
@@ -468,7 +468,7 @@ update() {
 }
 
 # Clean system
-clean() {
+function clean() {
     echo "Cleaning system..."
     
     # Clean package cache
