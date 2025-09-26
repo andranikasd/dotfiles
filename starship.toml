@@ -4,7 +4,7 @@
 # Left: user@host, kube context/namespace, git branch/status
 # Right: execution time
 # Newline, then path + prompt char
-format = "$username$hostname$kubernetes$git_branch$git_status$aws$directory$cmd_duration $character "
+format = "$username$hostname$kubernetes$git_branch$git_status$aws$directory$cmd_duration$memory_usage $character "
 add_newline = true
 
 # ── Prompt Character ──

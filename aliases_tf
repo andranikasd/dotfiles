@@ -1,4 +1,4 @@
-# Terraform aliases
+# ─── Terraform Aliases (Enhanced with FZF) ───
 alias tf="terraform"
 alias tfi="terraform init"
 alias tfp="terraform plan"
@@ -9,3 +9,130 @@ alias tfo="terraform output"
 alias tfw="terraform workspace"
 alias tfws="terraform workspace select"
 alias tfwn="terraform workspace new"
+
+# ─── Enhanced Terraform Operations ───
+alias tff="terraform fmt -recursive"
+alias tffc="terraform fmt -check -recursive"
+alias tfiup="terraform init -upgrade"
+alias tfir="terraform init -reconfigure"
+alias tfpout="terraform plan -out=plan.out"
+alias tfaauto="terraform apply -auto-approve"
+alias tfdauto="terraform destroy -auto-approve"
+alias tfpvar="terraform plan -var-file="
+alias tfavar="terraform apply -var-file="
+alias tfdvar="terraform destroy -var-file="
+
+# ─── FZF-powered Terraform Operations ───
+# Workspace selection with FZF
+alias fws='terraform workspace select $(terraform workspace list | fzf --preview "terraform workspace show")'
+alias fwsn='terraform workspace new $(echo | fzf --print-query)'
+
+# State operations with FZF
+alias fsl='terraform state list | fzf --preview "terraform state show {1}"'
+alias fss='terraform state show $(terraform state list | fzf --preview "terraform state show {1}")'
+alias fsrm='terraform state rm $(terraform state list | fzf --preview "terraform state show {1}")'
+alias fsmv='terraform state mv $(terraform state list | fzf --preview "terraform state show {1}")'
+
+# Resource targeting with FZF
+alias ftp='terraform plan -target=$(terraform state list | fzf --preview "terraform state show {1}")'
+alias fta='terraform apply -target=$(terraform state list | fzf --preview "terraform state show {1}")'
+alias ftd='terraform destroy -target=$(terraform state list | fzf --preview "terraform state show {1}")'
+
+# Variable file selection with FZF
+alias ftpv='terraform plan -var-file=$(find . -name "*.tfvars" | fzf --preview "cat {}")'
+alias ftav='terraform apply -var-file=$(find . -name "*.tfvars" | fzf --preview "cat {}")'
+alias ftdv='terraform destroy -var-file=$(find . -name "*.tfvars" | fzf --preview "cat {}")'
+
+# ─── Terraform State Management ───
+alias tfsl="terraform state list"
+alias tfsr="terraform state rm"
+alias tfsm="terraform state mv"
+alias tfsi="terraform state import"
+alias tfsd="terraform state show"
+alias tfsb="terraform state pull > terraform.tfstate.backup"
+
+# ─── Terraform Output Operations ───
+alias tfoj="terraform output -json"
+alias tfoy="terraform output -json | jq -r"
+alias tfok="terraform output -json | jq -r 'keys[]'"
+alias tfov="terraform output -json | jq -r '.[]'"
+
+# FZF-powered output selection
+alias ffo='terraform output -json | jq -r "keys[]" | fzf --preview "terraform output -json | jq -r \".{1}\"" | xargs -I {} terraform output {}'
+
+# ─── Terraform Validation & Formatting ───
+alias tfvf="terraform validate && terraform fmt -check -recursive"
+alias tffd="terraform fmt -diff -recursive"
+alias tffw="terraform fmt -write=true -recursive"
+
+# ─── Terraform Import Operations ───
+alias tfim="terraform import"
+alias tfiml="terraform import -list"
+
+# FZF-powered import
+alias ffim='terraform import $(terraform state list | fzf --preview "terraform state show {1}")'
+
+# ─── Terraform Graph Operations ───
+alias tfg="terraform graph"
+alias tfgo="terraform graph | dot -Tpng > graph.png"
+alias tfgs="terraform graph | dot -Tsvg > graph.svg"
+
+# ─── Terraform Console & Debug ───
+alias tfc="terraform console"
+alias tfd="terraform debug"
+alias tfdv="terraform debug -verbose"
+
+# ─── Terragrunt Aliases (if available) ───
+alias tg="terragrunt"
+alias tgi="terragrunt init"
+alias tgp="terragrunt plan"
+alias tga="terragrunt apply"
+alias tgd="terragrunt destroy"
+alias tgv="terragrunt validate"
+alias tgo="terragrunt output"
+alias tgw="terragrunt workspace"
+alias tgws="terragrunt workspace select"
+alias tgwn="terragrunt workspace new"
+
+# ─── Terragrunt Enhanced Operations ───
+alias tgf="terragrunt fmt"
+alias tgff="terragrunt fmt --terragrunt-hclfmt-file"
+alias tgiup="terragrunt init -upgrade"
+alias tgir="terragrunt init -reconfigure"
+alias tgpout="terragrunt plan -out=plan.out"
+alias tgaauto="terragrunt apply -auto-approve"
+alias tgdauto="terragrunt destroy -auto-approve"
+
+# ─── FZF-powered Terragrunt Operations ───
+alias fgws='terragrunt workspace select $(terragrunt workspace list | fzf --preview "terragrunt workspace show")'
+alias fgwsn='terragrunt workspace new $(echo | fzf --print-query)'
+
+# ─── Terraform/Terragrunt Utility Functions ───
+alias tflock="terraform providers lock -platform=linux_amd64 -platform=darwin_amd64 -platform=windows_amd64"
+alias tglock="terragrunt providers lock -platform=linux_amd64 -platform=darwin_amd64 -platform=windows_amd64"
+
+# ─── AWS CLI Integration (if available) ───
+alias tfaws="aws sts get-caller-identity"
+alias tfawsp="aws configure list-profiles"
+alias tfawsr="aws configure list-regions"
+
+# FZF-powered AWS profile selection
+alias fawsp='export AWS_PROFILE=$(aws configure list-profiles | fzf --preview "aws configure list --profile {}")'
+alias fawsr='export AWS_DEFAULT_REGION=$(aws configure list-regions | fzf)'
+
+# ─── Terraform Environment Management ───
+alias tfen="terraform env"
+alias tfenl="terraform env list"
+alias tfenw="terraform env workspace"
+alias tfenr="terraform env rename"
+alias tfenk="terraform env delete"
+
+# ─── Terraform Security & Compliance ───
+alias tfs="terraform show"
+alias tfsj="terraform show -json"
+alias tft="terraform taint"
+alias tfut="terraform untaint"
+
+# FZF-powered taint/untaint
+alias fft='terraform taint $(terraform state list | fzf --preview "terraform state show {1}")'
+alias ffut='terraform untaint $(terraform state list | fzf --preview "terraform state show {1}")'

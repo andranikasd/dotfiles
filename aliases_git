@@ -1,4 +1,4 @@
-# Git aliases
+# ─── Git Aliases (Enhanced with FZF) ───
 alias g="git"
 alias gst="git status -sb"
 alias gco="git checkout"
@@ -14,3 +14,89 @@ alias gss="git show --stat"
 alias gdf="git diff"
 alias gdm="git diff main"
 alias gdc="git diff --cached"
+
+# ─── Enhanced Git Operations ───
+alias gaa="git add --all"
+alias gac="git add . && git commit -m"
+alias gacp="git add . && git commit -m && git push"
+alias gundo="git reset --soft HEAD~1"
+alias ghard="git reset --hard HEAD~1"
+alias gclean="git clean -fd"
+alias gstash="git stash"
+alias gstashp="git stash pop"
+alias gstashl="git stash list"
+alias gstashd="git stash drop"
+alias gremote="git remote -v"
+alias gbranch="git branch"
+alias gbrancha="git branch -a"
+alias gbranchd="git branch -d"
+alias gbranchD="git branch -D"
+alias gtag="git tag"
+alias gtagd="git tag -d"
+alias gtagp="git push --tags"
+
+# ─── FZF-powered Git Operations ───
+# Branch selection with FZF
+alias fco='git checkout $(git branch -a | fzf --preview "git log --oneline --graph --decorate {1}" | sed "s/remotes\/origin\///" | sed "s/\*//" | tr -d " ")'
+alias fcb='git checkout -b $(echo | fzf --print-query)'
+alias fbd='git branch -d $(git branch | fzf --preview "git log --oneline --graph --decorate {1}")'
+alias fbdD='git branch -D $(git branch | fzf --preview "git log --oneline --graph --decorate {1}")'
+
+# Commit selection with FZF
+alias fshow='git show $(git log --oneline --graph --decorate | fzf --preview "git show --stat {1}" | cut -d" " -f1)'
+alias fcherry='git cherry-pick $(git log --oneline --graph --decorate | fzf --preview "git show --stat {1}" | cut -d" " -f1)'
+alias frevert='git revert $(git log --oneline --graph --decorate | fzf --preview "git show --stat {1}" | cut -d" " -f1)'
+
+# File selection with FZF
+alias fadd='git add $(git status --porcelain | fzf --preview "git diff --cached {2}" | cut -c4-)'
+alias fdiff='git diff $(git status --porcelain | fzf --preview "git diff {2}" | cut -c4-)'
+alias fcheckout='git checkout $(git status --porcelain | fzf --preview "git diff {2}" | cut -c4-)'
+alias freset='git reset HEAD $(git status --porcelain | fzf --preview "git diff --cached {2}" | cut -c4-)'
+
+# Stash selection with FZF
+alias fstash='git stash show -p $(git stash list | fzf --preview "git stash show -p {1}" | cut -d: -f1)'
+alias fstashp='git stash pop $(git stash list | fzf --preview "git stash show -p {1}" | cut -d: -f1)'
+alias fstashd='git stash drop $(git stash list | fzf --preview "git stash show -p {1}" | cut -d: -f1)'
+
+# Tag selection with FZF
+alias ftag='git checkout $(git tag | fzf --preview "git show --stat {1}")'
+alias ftagd='git tag -d $(git tag | fzf --preview "git show --stat {1}")'
+
+# ─── Git Workflow Shortcuts ───
+alias gsync='git fetch --all --prune && git pull --rebase --autostash'
+alias gupstream='git push --set-upstream origin $(git branch --show-current)'
+alias gpr='git push && gh pr create --web'
+alias gprd='git push && gh pr create --draft --web'
+alias gmerge='gh pr merge --merge --delete-branch'
+alias gsquash='gh pr merge --squash --delete-branch'
+
+# ─── Git Log Enhancements ───
+alias glog='git log --oneline --graph --decorate --all'
+alias gloga='git log --oneline --graph --decorate --all --remotes'
+alias glogf='git log --oneline --graph --decorate --follow'
+alias glogs='git log --oneline --graph --decorate --stat'
+alias glogp='git log --oneline --graph --decorate --patch'
+
+# ─── Git Diff Enhancements ───
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias gds='git diff --staged'
+alias gdh='git diff HEAD'
+alias gd1='git diff HEAD~1'
+alias gd2='git diff HEAD~2'
+alias gd3='git diff HEAD~3'
+
+# ─── Git Status Enhancements ───
+alias gs='git status'
+alias gss='git status --short'
+alias gsb='git status --branch'
+alias gsi='git status --ignored'
+
+# ─── Git Remote Operations ───
+alias gf='git fetch'
+alias gfa='git fetch --all'
+alias gfp='git fetch --prune'
+alias gfu='git fetch upstream'
+alias gpu='git push upstream'
+alias gpo='git push origin'
+alias gpod='git push origin --delete'

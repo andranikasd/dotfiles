@@ -1,0 +1,493 @@
+# ─── General Shell Functions ───
+
+# ─── Directory Navigation Functions ───
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
+
+# Create directory and cd into it, with FZF selection
+fmkcd() {
+    local dir
+    dir=$(echo | fzf --print-query)
+    mkdir -p "$dir" && cd "$dir"
+}
+
+# Quick directory bookmarking
+bookmark() {
+    echo "$(pwd)" >> "$HOME/.bookmarks"
+    echo "Bookmarked: $(pwd)"
+}
+
+# Go to bookmarked directory
+goto() {
+    local dir
+    dir=$(cat "$HOME/.bookmarks" | fzf --preview "ls -la {}")
+    cd "$dir"
+}
+
+# ─── File Operations Functions ───
+# Extract various archive types
+extract() {
+    if [ -f "$1" ]; then
+        case "$1" in
+            *.tar.bz2)   tar xjf "$1"     ;;
+            *.tar.gz)    tar xzf "$1"     ;;
+            *.bz2)       bunzip2 "$1"     ;;
+            *.rar)       unrar e "$1"     ;;
+            *.gz)        gunzip "$1"      ;;
+            *.tar)       tar xf "$1"      ;;
+            *.tbz2)      tar xjf "$1"     ;;
+            *.tgz)       tar xzf "$1"     ;;
+            *.zip)       unzip "$1"       ;;
+            *.Z)         uncompress "$1"  ;;
+            *.7z)        7z x "$1"        ;;
+            *.deb)       ar x "$1"        ;;
+            *.tar.xz)    tar xf "$1"      ;;
+            *.tar.zst)   unzstd "$1"      ;;
+            *)           echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+# Create archive with progress
+archive() {
+    local name="$1"
+    shift
+    tar -czf "${name}.tar.gz" "$@"
+}
+
+# Find and delete files with confirmation
+findrm() {
+    find . -name "$1" -type f -exec rm -i {} \;
+}
+
+# Find and delete directories with confirmation
+findrmdir() {
+    find . -name "$1" -type d -exec rm -rf {} \;
+}
+
+# ─── System Information Functions ───
+# Show system information
+sysinfo() {
+    echo "=== System Information ==="
+    echo "Hostname: $(hostname)"
+    echo "Kernel: $(uname -r)"
+    echo "Uptime: $(uptime -p)"
+    echo "Load: $(uptime | awk -F'load average:' '{print $2}')"
+    echo "Memory: $(free -h | grep '^Mem:' | awk '{print $3 "/" $2}')"
+    echo "Disk: $(df -h / | tail -1 | awk '{print $3 "/" $2 " (" $5 " used)"}')"
+    echo "CPU: $(lscpu | grep 'Model name' | cut -d: -f2 | xargs)"
+}
+
+# Show network information
+netinfo() {
+    echo "=== Network Information ==="
+    echo "External IP: $(curl -s ifconfig.me)"
+    echo "Local IP: $(hostname -I | awk '{print $1}')"
+    echo "Gateway: $(ip route | grep default | awk '{print $3}')"
+    echo "DNS: $(cat /etc/resolv.conf | grep nameserver | head -1 | awk '{print $2}')"
+}
+
+# Show process information
+psinfo() {
+    echo "=== Process Information ==="
+    echo "Top CPU processes:"
+    ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -10
+    echo ""
+    echo "Top Memory processes:"
+    ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -10
+}
+
+# ─── Development Functions ───
+# Create a new project directory with git
+newproject() {
+    local project_name="$1"
+    if [ -z "$project_name" ]; then
+        echo "Usage: newproject <project_name>"
+        return 1
+    fi
+    
+    mkdir -p "$project_name"
+    cd "$project_name"
+    git init
+    echo "# $project_name" > README.md
+    git add README.md
+    git commit -m "Initial commit"
+    echo "Created project: $project_name"
+}
+
+# Clone and setup a repository
+clonesetup() {
+    local repo_url="$1"
+    local repo_name=$(basename "$repo_url" .git)
+    
+    git clone "$repo_url"
+    cd "$repo_name"
+    
+    # Check for common setup files
+    if [ -f "package.json" ]; then
+        echo "Found package.json, running npm install..."
+        npm install
+    fi
+    
+    if [ -f "requirements.txt" ]; then
+        echo "Found requirements.txt, creating virtual environment..."
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+    fi
+    
+    if [ -f "go.mod" ]; then
+        echo "Found go.mod, running go mod download..."
+        go mod download
+    fi
+    
+    if [ -f "Cargo.toml" ]; then
+        echo "Found Cargo.toml, running cargo build..."
+        cargo build
+    fi
+    
+    echo "Setup complete for: $repo_name"
+}
+
+# ─── Git Functions ───
+# Quick git setup for new repository
+gitsetup() {
+    local repo_name="$1"
+    if [ -z "$repo_name" ]; then
+        repo_name=$(basename "$(pwd)")
+    fi
+    
+    git init
+    git add .
+    git commit -m "Initial commit"
+    gh repo create "$repo_name" --public --source=. --remote=origin --push
+    echo "Repository created: https://github.com/$(gh api user --jq .login)/$repo_name"
+}
+
+# Git commit with emoji
+gcommit() {
+    local message="$1"
+    if [ -z "$message" ]; then
+        echo "Usage: gcommit <message>"
+        return 1
+    fi
+    
+    git add .
+    git commit -m "$message"
+}
+
+# Git push with upstream
+gpush() {
+    local branch=$(git branch --show-current)
+    git push --set-upstream origin "$branch"
+}
+
+# Git pull with rebase
+gpull() {
+    git pull --rebase --autostash
+}
+
+# Git sync (fetch, pull, push)
+gsync() {
+    git fetch --all --prune
+    git pull --rebase --autostash
+    git push
+}
+
+# ─── Docker Functions ───
+# Docker cleanup
+dcleanup() {
+    echo "Cleaning up Docker resources..."
+    docker system prune -f
+    docker volume prune -f
+    docker network prune -f
+    echo "Docker cleanup complete"
+}
+
+# Docker run with interactive shell
+drun() {
+    local image="$1"
+    if [ -z "$image" ]; then
+        echo "Usage: drun <image>"
+        return 1
+    fi
+    
+    docker run -it --rm "$image" /bin/bash
+}
+
+# Docker exec into running container
+dexec() {
+    local container="$1"
+    if [ -z "$container" ]; then
+        container=$(docker ps | fzf --preview "docker logs {1}" | awk '{print $1}')
+    fi
+    
+    docker exec -it "$container" /bin/bash
+}
+
+# ─── Kubernetes Functions ───
+# Switch Kubernetes context
+kctx() {
+    local context="$1"
+    if [ -z "$context" ]; then
+        context=$(kubectl config get-contexts -o name | fzf)
+    fi
+    
+    kubectl config use-context "$context"
+    echo "Switched to context: $context"
+}
+
+# Switch Kubernetes namespace
+kns() {
+    local namespace="$1"
+    if [ -z "$namespace" ]; then
+        namespace=$(kubectl get namespaces -o name | fzf | cut -d/ -f2)
+    fi
+    
+    kubectl config set-context --current --namespace="$namespace"
+    echo "Switched to namespace: $namespace"
+}
+
+# Port forward with FZF selection
+kpf() {
+    local pod=$(kubectl get pods --all-namespaces | fzf --preview "kubectl describe pod {2} -n {1}" | awk '{print $2 " -n " $1}')
+    local port="$1"
+    
+    if [ -z "$port" ]; then
+        echo "Usage: kpf <port>"
+        return 1
+    fi
+    
+    kubectl port-forward "$pod" "$port"
+}
+
+# ─── Terraform Functions ───
+# Terraform workspace management
+tfws() {
+    local workspace="$1"
+    if [ -z "$workspace" ]; then
+        workspace=$(terraform workspace list | fzf)
+    fi
+    
+    terraform workspace select "$workspace"
+    echo "Switched to workspace: $workspace"
+}
+
+# Terraform plan with output
+tfplan() {
+    terraform plan -out=plan.out
+    echo "Plan saved to plan.out"
+}
+
+# Terraform apply with plan
+tfapply() {
+    if [ -f "plan.out" ]; then
+        terraform apply plan.out
+        rm plan.out
+    else
+        terraform apply
+    fi
+}
+
+# ─── AWS Functions ───
+# AWS profile management
+awsprofile() {
+    local profile="$1"
+    if [ -z "$profile" ]; then
+        profile=$(aws configure list-profiles | fzf)
+    fi
+    
+    export AWS_PROFILE="$profile"
+    echo "Switched to AWS profile: $profile"
+}
+
+# AWS region management
+awsregion() {
+    local region="$1"
+    if [ -z "$region" ]; then
+        region=$(aws configure list-regions | fzf)
+    fi
+    
+    export AWS_DEFAULT_REGION="$region"
+    echo "Switched to AWS region: $region"
+}
+
+# ─── Utility Functions ───
+# Create a temporary directory and cd into it
+tmpdir() {
+    local dir=$(mktemp -d)
+    cd "$dir"
+    echo "Created temporary directory: $dir"
+}
+
+# Find and replace in files
+findreplace() {
+    local search="$1"
+    local replace="$2"
+    local pattern="$3"
+    
+    if [ -z "$search" ] || [ -z "$replace" ]; then
+        echo "Usage: findreplace <search> <replace> [pattern]"
+        return 1
+    fi
+    
+    if [ -z "$pattern" ]; then
+        pattern="*"
+    fi
+    
+    find . -name "$pattern" -type f -exec sed -i "s/$search/$replace/g" {} \;
+    echo "Replaced '$search' with '$replace' in files matching '$pattern'"
+}
+
+# Create a backup of a file
+backup() {
+    local file="$1"
+    if [ -z "$file" ]; then
+        echo "Usage: backup <file>"
+        return 1
+    fi
+    
+    if [ -f "$file" ]; then
+        cp "$file" "${file}.backup.$(date +%Y%m%d_%H%M%S)"
+        echo "Backed up: $file"
+    else
+        echo "File not found: $file"
+    fi
+}
+
+# Restore from backup
+restore() {
+    local file="$1"
+    if [ -z "$file" ]; then
+        echo "Usage: restore <file>"
+        return 1
+    fi
+    
+    local backup_file=$(ls -t "${file}.backup."* 2>/dev/null | head -1)
+    if [ -n "$backup_file" ]; then
+        cp "$backup_file" "$file"
+        echo "Restored: $file from $backup_file"
+    else
+        echo "No backup found for: $file"
+    fi
+}
+
+# ─── FZF Integration Functions ───
+# FZF with preview for any command
+fpreview() {
+    local cmd="$1"
+    shift
+    eval "$cmd" | fzf --preview "$*"
+}
+
+# FZF with preview for files
+fpreview_files() {
+    fd --type f --hidden --follow --exclude .git | fzf --preview "bat --color=always --style=header,grid --line-range :300 {}"
+}
+
+# FZF with preview for directories
+fpreview_dirs() {
+    fd --type d --hidden --follow --exclude .git | fzf --preview "exa --tree --level=2 {}"
+}
+
+# ─── Weather Functions ───
+# Get weather information
+weather() {
+    local city="$1"
+    if [ -z "$city" ]; then
+        city="London"
+    fi
+    
+    curl -s "wttr.in/$city?format=3"
+}
+
+# ─── Password Functions ───
+# Generate a random password
+genpass() {
+    local length="${1:-16}"
+    openssl rand -base64 32 | tr -d "=+/" | cut -c1-"$length"
+}
+
+# Generate a secure password
+genpass_secure() {
+    local length="${1:-16}"
+    openssl rand -base64 48 | tr -d "=+/" | cut -c1-"$length"
+}
+
+# ─── Time Functions ───
+# Show current time in different timezones
+worldtime() {
+    echo "=== World Time ==="
+    echo "UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
+    echo "New York: $(TZ='America/New_York' date '+%Y-%m-%d %H:%M:%S')"
+    echo "London: $(TZ='Europe/London' date '+%Y-%m-%d %H:%M:%S')"
+    echo "Tokyo: $(TZ='Asia/Tokyo' date '+%Y-%m-%d %H:%M:%S')"
+    echo "Sydney: $(TZ='Australia/Sydney' date '+%Y-%m-%d %H:%M:%S')"
+}
+
+# ─── Network Functions ───
+# Test internet speed
+speedtest() {
+    curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3
+}
+
+# Check if a website is up
+isup() {
+    local url="$1"
+    if [ -z "$url" ]; then
+        echo "Usage: isup <url>"
+        return 1
+    fi
+    
+    if curl -s --head "$url" | head -n 1 | grep -q "200 OK"; then
+        echo "✅ $url is up"
+    else
+        echo "❌ $url is down"
+    fi
+}
+
+# ─── System Maintenance Functions ───
+# Update system packages
+update() {
+    if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update && sudo apt-get upgrade -y
+    elif command -v yum >/dev/null 2>&1; then
+        sudo yum update -y
+    elif command -v dnf >/dev/null 2>&1; then
+        sudo dnf update -y
+    elif command -v pacman >/dev/null 2>&1; then
+        sudo pacman -Syu --noconfirm
+    elif command -v brew >/dev/null 2>&1; then
+        brew update && brew upgrade
+    else
+        echo "No supported package manager found"
+    fi
+}
+
+# Clean system
+clean() {
+    echo "Cleaning system..."
+    
+    # Clean package cache
+    if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get autoremove -y
+        sudo apt-get autoclean
+    elif command -v yum >/dev/null 2>&1; then
+        sudo yum clean all
+    elif command -v dnf >/dev/null 2>&1; then
+        sudo dnf clean all
+    elif command -v pacman >/dev/null 2>&1; then
+        sudo pacman -Sc --noconfirm
+    elif command -v brew >/dev/null 2>&1; then
+        brew cleanup
+    fi
+    
+    # Clean temporary files
+    rm -rf /tmp/*
+    rm -rf ~/.cache/*
+    
+    echo "System cleanup complete"
+}
