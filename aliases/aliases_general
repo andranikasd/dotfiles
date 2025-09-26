@@ -1,0 +1,112 @@
+# ─── Directory Navigation (Enhanced with FZF) ───
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias ~='cd ~'
+alias cd-='cd -'
+
+# FZF-powered directory navigation
+alias fcd='cd $(fd --type d --hidden --follow --exclude .git | fzf --height 40% --layout=reverse --border)'
+alias fcdh='cd $(find . -type d -name ".*" -prune -o -type d -print | fzf --height 40% --layout=reverse --border)'
+
+# ─── Enhanced Listing & Search ───
+alias ll='exa -lh --group-directories-first --color=auto'
+alias la='exa -lah --group-directories-first --color=auto'
+alias lsd='exa -lh --group-directories-first --color=auto --only-dirs'
+alias lt='exa --tree --level=2'
+alias lta='exa --tree --level=2 --all'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# FZF-powered file search
+alias ff='fzf --preview "bat --color=always --style=header,grid --line-range :300 {}"'
+alias ffa='fd --type f --hidden --follow --exclude .git | fzf --preview "bat --color=always --style=header,grid --line-range :300 {}"'
+alias ffd='fd --type d --hidden --follow --exclude .git | fzf --preview "exa --tree --level=2 {}"'
+
+# ─── Files & Disk (Enhanced) ───
+alias df='df -h'
+alias du='du -h'
+alias dus='du -sh * | sort -hr'
+alias free='free -h'
+alias cpv='rsync -ah --info=progress2'   # Copy with progress
+alias rmrf='rm -rf --one-file-system'    # Safe-ish rm -rf
+
+# FZF-powered file operations
+alias fcp='cp $(fzf) '
+alias fmv='mv $(fzf) '
+alias frm='rm -i $(fzf)'
+
+# ─── Compression (Enhanced) ───
+alias untar='tar -xvf'
+alias untgz='tar -xzvf'
+alias untbz2='tar -xjvf'
+alias untxz='tar -xJvf'
+alias targz='tar -czvf'
+alias tarbz2='tar -cjvf'
+alias tarxz='tar -cJvf'
+
+# ─── System Info & Monitoring (Enhanced) ───
+alias cls='clear'
+alias please='sudo $(fc -ln -1)'
+alias h='history'
+alias cpuinfo='lscpu'
+alias meminfo='free -h'
+alias ports='ss -tuln'
+alias myip='curl -s ifconfig.me'
+alias topcpu='ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head'
+alias topmem='ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head'
+
+# FZF-powered process management
+alias fkill='kill -9 $(ps aux | fzf | awk "{print \$2}")'
+alias fkillall='pkill -f $(ps aux | fzf | awk "{print \$11}")'
+
+# ─── Networking (Enhanced) ───
+alias pingg='ping 8.8.8.8'
+alias pings='ping -c 5 8.8.8.8'
+alias digg='dig +short'
+alias curlh='curl -I'
+
+# ─── GitHub CLI Shortcuts (Enhanced) ───
+alias ghr='gh repo view --web'
+alias ghpr='gh pr view --web'
+alias ghprc='gh pr create --web'
+alias ghprl='gh pr list'
+alias ghiss='gh issue list'
+alias ghisc='gh issue create --web'
+
+# FZF-powered GitHub operations
+alias fghpr='gh pr list | fzf --preview "gh pr view {1}" | awk "{print \$1}" | xargs gh pr view --web'
+alias fghiss='gh issue list | fzf --preview "gh issue view {1}" | awk "{print \$1}" | xargs gh issue view --web'
+
+# ─── WSL-specific Helpers (Enhanced) ───
+alias winopen='explorer.exe .'
+alias clip='clip.exe'
+alias open='xdg-open'
+
+# ─── Development Tools (Enhanced) ───
+alias serve='python3 -m http.server'
+alias watchd='watch -n 1'
+alias path='echo -e ${PATH//:/\\n}'
+alias mkcd='mkdir -p "$1" && cd "$1"'
+
+# FZF-powered development
+alias fcode='code $(fzf)'
+alias fnvim='nvim $(fzf)'
+alias fcat='cat $(fzf)'
+alias fless='less $(fzf)'
+
+# ─── Docker (if available) ───
+alias dps='docker ps'
+alias dpsa='docker ps -a'
+alias di='docker images'
+alias dex='docker exec -it'
+alias dlog='docker logs'
+alias dstop='docker stop'
+alias drm='docker rm'
+alias drmi='docker rmi'
+
+# FZF-powered Docker operations
+alias fdps='docker ps | fzf --preview "docker logs {1}" | awk "{print \$1}"'
+alias fdi='docker images | fzf | awk "{print \$3}" | xargs docker run -it'
+alias fdlog='docker ps | fzf | awk "{print \$1}" | xargs docker logs -f'

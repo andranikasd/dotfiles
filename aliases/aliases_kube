@@ -1,0 +1,103 @@
+# ─── Kubernetes Aliases (Enhanced with FZF) ───
+alias k="kubectl"
+alias kgp="kubectl get pods -A"
+alias kgs="kubectl get svc -A"
+alias kgn="kubectl get nodes -o wide"
+alias kaf="kubectl apply -f"
+alias kdf="kubectl delete -f"
+alias kl="kubectl logs"
+alias kctx="kubectl config use-context"
+alias kns="kubectl config set-context --current --namespace"
+alias kdesc="kubectl describe"
+alias kedit="kubectl edit"
+
+# ─── Enhanced Kubernetes Operations ───
+alias kgpa="kubectl get pods --all-namespaces"
+alias kgsa="kubectl get svc --all-namespaces"
+alias kgda="kubectl get deployments --all-namespaces"
+alias kgrsa="kubectl get replicasets --all-namespaces"
+alias kgia="kubectl get ingress --all-namespaces"
+alias kgca="kubectl get configmaps --all-namespaces"
+alias kgsa="kubectl get secrets --all-namespaces"
+alias kgna="kubectl get namespaces"
+alias kgno="kubectl get nodes -o wide"
+alias kgpv="kubectl get pv"
+alias kgpvc="kubectl get pvc --all-namespaces"
+
+# ─── FZF-powered Kubernetes Operations ───
+# Context and namespace selection
+alias fctx='kubectl config use-context $(kubectl config get-contexts -o name | fzf --preview "kubectl config get-contexts")'
+alias fns='kubectl config set-context --current --namespace $(kubectl get namespaces -o name | fzf --preview "kubectl get pods -n {1}")'
+
+# Pod operations with FZF
+alias fpod='kubectl get pods --all-namespaces | fzf --preview "kubectl describe pod {2} -n {1}" | awk "{print \$2 \" -n \" \$1}"'
+alias fpodl='kubectl logs -f $(kubectl get pods --all-namespaces | fzf --preview "kubectl describe pod {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+alias fpodd='kubectl describe $(kubectl get pods --all-namespaces | fzf --preview "kubectl describe pod {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+alias fpode='kubectl exec -it $(kubectl get pods --all-namespaces | fzf --preview "kubectl describe pod {2} -n {1}" | awk "{print \$2 \" -n \" \$1}") -- /bin/bash'
+alias fpodsh='kubectl exec -it $(kubectl get pods --all-namespaces | fzf --preview "kubectl describe pod {2} -n {1}" | awk "{print \$2 \" -n \" \$1}") -- /bin/sh'
+
+# Service operations with FZF
+alias fsvc='kubectl get svc --all-namespaces | fzf --preview "kubectl describe svc {2} -n {1}" | awk "{print \$2 \" -n \" \$1}"'
+alias fsvcd='kubectl describe $(kubectl get svc --all-namespaces | fzf --preview "kubectl describe svc {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+
+# Deployment operations with FZF
+alias fdep='kubectl get deployments --all-namespaces | fzf --preview "kubectl describe deployment {2} -n {1}" | awk "{print \$2 \" -n \" \$1}"'
+alias fdepd='kubectl describe $(kubectl get deployments --all-namespaces | fzf --preview "kubectl describe deployment {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+alias fdepr='kubectl rollout restart $(kubectl get deployments --all-namespaces | fzf --preview "kubectl describe deployment {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+alias fdepu='kubectl rollout undo $(kubectl get deployments --all-namespaces | fzf --preview "kubectl describe deployment {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+
+# ConfigMap and Secret operations with FZF
+alias fcm='kubectl get configmaps --all-namespaces | fzf --preview "kubectl describe configmap {2} -n {1}" | awk "{print \$2 \" -n \" \$1}"'
+alias fcmd='kubectl describe $(kubectl get configmaps --all-namespaces | fzf --preview "kubectl describe configmap {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+alias fsec='kubectl get secrets --all-namespaces | fzf --preview "kubectl describe secret {2} -n {1}" | awk "{print \$2 \" -n \" \$1}"'
+alias fsecd='kubectl describe $(kubectl get secrets --all-namespaces | fzf --preview "kubectl describe secret {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+
+# Ingress operations with FZF
+alias fing='kubectl get ingress --all-namespaces | fzf --preview "kubectl describe ingress {2} -n {1}" | awk "{print \$2 \" -n \" \$1}"'
+alias fingd='kubectl describe $(kubectl get ingress --all-namespaces | fzf --preview "kubectl describe ingress {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+
+# ─── Kubernetes Port Forwarding ───
+alias kpf='kubectl port-forward'
+alias fpf='kubectl port-forward $(kubectl get pods --all-namespaces | fzf --preview "kubectl describe pod {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+
+# ─── Kubernetes Debugging ───
+alias kdebug='kubectl run debug --image=busybox --rm -it --restart=Never --'
+alias kdebugalpine='kubectl run debug --image=alpine --rm -it --restart=Never --'
+alias kdebugubuntu='kubectl run debug --image=ubuntu --rm -it --restart=Never --'
+
+# ─── Kubernetes Resource Management ───
+alias kdelp='kubectl delete pod'
+alias kdeld='kubectl delete deployment'
+alias kdels='kubectl delete svc'
+alias kdeli='kubectl delete ingress'
+alias kdelcm='kubectl delete configmap'
+alias kdelsec='kubectl delete secret'
+
+# FZF-powered deletion
+alias fdelp='kubectl delete pod $(kubectl get pods --all-namespaces | fzf --preview "kubectl describe pod {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+alias fdeld='kubectl delete deployment $(kubectl get deployments --all-namespaces | fzf --preview "kubectl describe deployment {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+alias fdels='kubectl delete svc $(kubectl get svc --all-namespaces | fzf --preview "kubectl describe svc {2} -n {1}" | awk "{print \$2 \" -n \" \$1}")'
+
+# ─── Kubernetes Monitoring ───
+alias ktop='kubectl top nodes'
+alias ktopn='kubectl top nodes --sort-by=cpu'
+alias ktopm='kubectl top nodes --sort-by=memory'
+alias ktopo='kubectl top pods'
+alias ktopop='kubectl top pods --sort-by=cpu'
+alias ktopom='kubectl top pods --sort-by=memory'
+
+# ─── Kubernetes Events ───
+alias kevents='kubectl get events --sort-by=.metadata.creationTimestamp'
+alias keventsa='kubectl get events --all-namespaces --sort-by=.metadata.creationTimestamp'
+alias keventsw='kubectl get events --watch'
+
+# ─── Kubernetes YAML Operations ───
+alias kgety='kubectl get -o yaml'
+alias kgetj='kubectl get -o json'
+alias kgetw='kubectl get -o wide'
+alias kgetn='kubectl get --no-headers'
+
+# ─── Kubernetes Custom Resources ───
+alias kcrd='kubectl get crd'
+alias kcrdd='kubectl describe crd'
+alias kcrdy='kubectl get crd -o yaml'
